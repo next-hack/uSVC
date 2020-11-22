@@ -122,7 +122,8 @@ void initVga();
 	uint32_t putSprite(uint16_t num, int32_t x, int32_t y, uint16_t flags, uint16_t frameNum);	// put a sprite in the list of sprites to be drawn. NOTE! this does not actually draw the sprites! drawSprites must be called.
 	void putCharInTile(const uint8_t (*font)[128][8], uint8_t c, uint8_t color, uint8_t backGroundColor, uint8_t flags ,uint8_t *pTile, int yOffset);		// put one char in the specified ram tile
 	void drawSprites();																										// draw the sprites in the list
-	void removeAllSprites(uint8_t redrawScreen);																			// remove all the sprites in the list, and optionally restores the VRAM (useful if the vram is not later updated by other functions).
+	void removeAllSprites(uint8_t redrawScreen);	
+	void freeSpriteTiles(void);																		// remove all the sprites in the list, and optionally restores the VRAM (useful if the vram is not later updated by other functions).
 	void drawFixedSection();																								// copy the fixed section map to the bottom or top part of the vram.
 	void restoreBackgroundTiles(void);																						// restores the background tiles, i.e cancelling the sprites. This does not clear the sprite list.
 #endif

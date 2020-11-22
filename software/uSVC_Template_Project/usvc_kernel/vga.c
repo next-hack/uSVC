@@ -2368,7 +2368,7 @@ void removeAllSprites(uint8_t redrawScreen)
 	{
 		usvcSprites[i].frameNum = 0xFFFF;	
 	}
-	if (redrawScreen && !videoData.spriteTilesRemoved)		// if we want to redraw the screen after the sprites have been removed, without actually calling drawSprites...
+	if (redrawScreen && !videoData.spriteTilesRemoved)		// if we want to redraw the screen after the sprites have been removed, without actually redraw the map on vram.
 	{
 		restoreBackgroundTiles();
 	}		
@@ -2388,6 +2388,18 @@ void restoreBackgroundTiles(void)
 		}
 	}	
 	videoData.spriteTilesRemoved = 1;			// we set spriteTilesRemoved, so that if the user calls drawSprites, then it does not try to restore the tiles.
+}
+/* freeSpriteTiles()
+* quickly deallocateAllSpriteTiles by writing 0x0000FFFF on them
+*/
+void freeSpriteTiles()
+{
+	uint32_t *p = (uint32_t*) spriteTiles;
+	for (int i = 0; i < sizeof (spriteTiles) / sizeof (spriteTile_t); i++)
+	{
+		*p++ = 0x0000FFFF;	// this will reset both originalTileLoAddr and  originalVramIndex
+	}
+	videoData.spriteTilesRemoved = 1;				
 }
 /* drawFixedSection()
 *  Redraws the fixed section by translating the fixedSectionMap to the vram, at the right position.
