@@ -66,7 +66,8 @@ void *usbStandardSingleDeviceAllocateDriverMemory(uint16_t memory, uint8_t devic
 }
 void initBoostEnablePin(void)
 {
-	setPortMux(BOOST_ENABLE_PIN, PORT_PMUX_PMUXE_H_Val );
+	setPortMux(USB_HOST_EN_PIN, PORT_PMUX_PMUXE_H_Val );  // workaround to avoid issues on some video modes.
+	setPortMux(BOOST_ENABLE_PIN, PORT_PMUX_PMUXE_H_Val);  
 }
 
 //#define USB_HOST_DEBUG
@@ -743,14 +744,6 @@ void usbHostInit()
 	uhdForceFullSpeed();
 	// note: we should delete all the ram pointers here... for all the devices
 	pUSB->currentUSBdeviceNumber = 0;
-	//
-	// give a strong output then go back to input
-	REG_PORT_OUTSET0 = (1 << USB_HOST_EN_PIN);
-	REG_PORT_DIRSET0 = (1 << USB_HOST_EN_PIN);
-	PORT->Group[0].PINCFG[USB_HOST_EN_PIN].reg = PORT_PINCFG_PULLEN | PORT_PINCFG_INEN;
-	// go back as input
-	REG_PORT_DIRCLR0 = (1 << USB_HOST_EN_PIN);
-		
 	// Put VBUS on USB port
 	usbHostPowerOn();
 	#ifdef USB_USE_INTERRUPT
