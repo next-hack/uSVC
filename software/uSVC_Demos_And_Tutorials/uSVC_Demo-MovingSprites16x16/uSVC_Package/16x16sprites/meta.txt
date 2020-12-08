@@ -1,0 +1,15 @@
+16x16 sprites
+16x16 sprites
+demo
+
+
+28 sprites
+move around in
+an scrolling
+background.
+Nicola Wrachien
+
+08-06-20
+V1.00
+
+

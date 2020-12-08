@@ -1,0 +1,15 @@
+8x8 sprites
+8x8 sprites
+demo
+
+
+66 sprites
+move around in
+an animated
+background.
+Nicola Wrachien
+
+08-06-20
+V1.00
+
+
