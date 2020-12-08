@@ -2,4 +2,7 @@
 Available ".stl" files are:
 - Top
 - Bottom
+
+Available ".step" files are:
 - Assembled
+
