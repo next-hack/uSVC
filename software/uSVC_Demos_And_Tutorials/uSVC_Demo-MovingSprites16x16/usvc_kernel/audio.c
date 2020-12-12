@@ -1148,7 +1148,7 @@ void triggerCommon(Track* track, uint8_t patch, uint8_t volume, int16_t note)  /
 	{
 		track->patchNo = patch;
 	}
-	if (note > 0)
+	if (note >= 0)
 		setMixerNote(track->channel, note); // this must be called AFTER "if (isFx)", because the patch must be correctly set
 	const char *pos = (const char*)(patchPointers[patch].cmdStream);
 	if (pos == NULL) 
@@ -1177,43 +1177,50 @@ uint8_t triggerFx (int16_t patch,unsigned char volume, uint8_t flags, uint32_t d
 		return 0;	// channel 0 will never be allocated, so it is safe to return this.
 	unsigned char channel;
 	uint8_t retrig = flags & FX_FLAGS_RETRIG;
-	//find the channel to play the fx
-	//try to steal voice 3, then 2, then 1
-	//never steal voice 0, reserve it for lead melodies
-	if( (tracks[3].flags & TRACK_FLAGS_PRIORITY) == 0 || (tracks[3].fxPatchNo == patch && (tracks[3].flags & TRACK_FLAGS_PRIORITY) != 0 && retrig != 0))
+	if (!(flags & FX_FLAGS_SPECIFY_CHANNEL))
 	{
-		// fx already playing	
-		channel = 3;
-	}
-	else if( (tracks[1].flags & TRACK_FLAGS_PRIORITY) == 0 || (tracks[1].fxPatchNo == patch && (tracks[1].flags & TRACK_FLAGS_PRIORITY) != 0 && retrig != 0))
-	{ //fx already playing
-		channel = 1;
-	}
-	else if ( (tracks[2].flags & TRACK_FLAGS_PRIORITY ) == 0 || (tracks[2].fxPatchNo == patch && (tracks[2].flags & TRACK_FLAGS_PRIORITY) != 0 && retrig != 0))
-	{ //fx already playing				
-		channel = 2;
+		//find the channel to play the fx
+		//try to steal voice 3, then 2, then 1
+		//never steal voice 0, reserve it for lead melodies
+		if( (tracks[3].flags & TRACK_FLAGS_PRIORITY) == 0 || (tracks[3].fxPatchNo == patch && (tracks[3].flags & TRACK_FLAGS_PRIORITY) != 0 && retrig != 0))
+		{
+			// fx already playing
+			channel = 3;
+		}
+		else if( (tracks[1].flags & TRACK_FLAGS_PRIORITY) == 0 || (tracks[1].fxPatchNo == patch && (tracks[1].flags & TRACK_FLAGS_PRIORITY) != 0 && retrig != 0))
+		{ //fx already playing
+			channel = 1;
+		}
+		else if ( (tracks[2].flags & TRACK_FLAGS_PRIORITY ) == 0 || (tracks[2].fxPatchNo == patch && (tracks[2].flags & TRACK_FLAGS_PRIORITY) != 0 && retrig != 0))
+		{ //fx already playing
+			channel = 2;
+		}
+		else
+		{
+			// all channels have fx playing, use the oldest one
+			channel = 1;
+			uint16_t oldestTime = tracks[1].patchPlayingTime ;
+			for (int i = 2; i < 4; i++)
+			{
+				if (tracks[i].patchPlayingTime > oldestTime)
+				{
+					channel = i;
+					oldestTime = tracks[i].patchPlayingTime;
+				}
+			}
+		}	
 	}
 	else
 	{
-		// all channels have fx playing, use the oldest one
-		channel = 1;
-		uint16_t oldestTime = tracks[1].patchPlayingTime ;
-		for (int i = 2; i < 4; i++)
-		{
-			if (tracks[i].patchPlayingTime > oldestTime)
-			{
-				channel = i;
-				oldestTime = tracks[i].patchPlayingTime;
-			}	 
-		}
-	}				
+		channel = ((flags & FX_FLAGS_SPECIFY_CHANNEL_MASK) >> FX_FLAGS_SPECIFY_CHANNEL_POS);
+	}
 	Track* track= &tracks[channel];
 
 	track->flags = TRACK_FLAGS_PRIORITY; //priority=1;
 	track->patchCommandStreamPos = NULL;	
 	if (flags & FX_FLAGS_SPECIFY_SAMPLE_FREQUENCY)
 	{
-		audioMixerData.channels[channel].increment = ((soundWaves[patchPointers[patch].soundWaveNumber].sps) << 8) / SAMPLE_RATE;
+			audioMixerData.channels[channel].increment = (((soundWaves[patchPointers[patch].soundWaveNumber].sps) * (detuning >> 4) ) / SAMPLE_RATE) >> 4;
 		uint32_t loopStart = patchPointers[patch].loopStart;
 		uint32_t loopEnd = patchPointers[patch].loopEnd;
 		if ((loopStart + 1) >= loopEnd)
