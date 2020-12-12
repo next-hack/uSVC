@@ -1172,7 +1172,6 @@ void triggerCommon(Track* track, uint8_t patch, uint8_t volume, int16_t note)  /
  */
 uint8_t triggerFx (int16_t patch,unsigned char volume, uint8_t flags, uint32_t detuning)
 {
-	(void) detuning;	// avoid warnings until we implement the detuning feature.
 	if (patch < 0)
 		return 0;	// channel 0 will never be allocated, so it is safe to return this.
 	unsigned char channel;
@@ -1220,13 +1219,12 @@ uint8_t triggerFx (int16_t patch,unsigned char volume, uint8_t flags, uint32_t d
 	track->patchCommandStreamPos = NULL;	
 	if (flags & FX_FLAGS_SPECIFY_SAMPLE_FREQUENCY)
 	{
-			audioMixerData.channels[channel].increment = (((soundWaves[patchPointers[patch].soundWaveNumber].sps) * (detuning >> 4) ) / SAMPLE_RATE) >> 4;
+		audioMixerData.channels[channel].increment = (((soundWaves[patchPointers[patch].soundWaveNumber].sps) * (detuning >> 4) ) / SAMPLE_RATE) >> 4;
 		uint32_t loopStart = patchPointers[patch].loopStart;
 		uint32_t loopEnd = patchPointers[patch].loopEnd;
 		if ((loopStart + 1) >= loopEnd)
 			audioMixerData.channels[channel].delta = audioMixerData.channels[channel].increment;
 		triggerCommon(track, patch, volume , -1);	
-
 	}
 	else
 	{
