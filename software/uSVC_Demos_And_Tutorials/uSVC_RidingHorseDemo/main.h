@@ -53,4 +53,4 @@
 #include "level.h"
 #include "tiledMapFunctions.h"
 #include "tileTypes.h"
-#endif /* UCHIPPLAY_H_ */
+#endif /* MAIN_H_ */

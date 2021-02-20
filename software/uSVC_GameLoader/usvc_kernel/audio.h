@@ -149,7 +149,7 @@ void soundEngine(void);
 void initMusicPlayer(const patch_t *patchPointersParam);
 void stopSong();
 void resumeSong();
-void setSongSpeed(uint8_t speed);
+void setSongSpeed(int8_t speed);
 uint8_t getSongSpeed();
 void setNoteVol(uint8_t channel, uint8_t vol);
 void setMixerPlaySpeed(uint8_t channel, uint16_t increment);

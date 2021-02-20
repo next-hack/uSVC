@@ -28,4 +28,4 @@
 #define MAIN_H_
 // We are too lazy to check which header should be put on each c file. We just put everything here, and then we include main.h
 #include "usvc_kernel/usvc_kernel.h"
-#endif /* UCHIPPLAY_H_ */
+#endif /* MAIN_H_ */

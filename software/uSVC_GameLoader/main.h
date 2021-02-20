@@ -32,4 +32,4 @@
 #include "usvcLogoMap.h"
 uint16_t getFrameTicks(void);
 void addLineAtBottom(char *text, uint16_t fgColor, uint16_t bkgColor);
-#endif /* UCHIPPLAY_H_ */
+#endif /* MAIN_H_ */

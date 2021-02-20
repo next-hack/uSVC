@@ -31,4 +31,4 @@
 #include "demoMap.h"
 #include "romTiles.h"
 #include "sinTable.h"
-#endif /* UCHIPPLAY_H_ */
+#endif /* MAIN_H_ */

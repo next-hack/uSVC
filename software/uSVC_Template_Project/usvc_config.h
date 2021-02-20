@@ -95,7 +95,8 @@
 		int getNumberOfPatches() {return sizeof(patches) / sizeof(patch_t);}
 	5) Include at the bottom of this file, the headers of the soundWaves and patches. 
 */
-#define AUDIO_ENABLED 0				// if 1, audio engine is enabled. To actually produce audio, you must also enable USE_MIXER. You also need to provide 
+#define AUDIO_ENABLED 0				// if 1, audio engine is enabled. To actually produce audio, you must also enable USE_MIXER. You also need to provide
+#define SONG_SPEED 0                            // if 1 enables the setSongSpeed function
 #define USE_MIXER (AUDIO_ENABLED)	// note: it must be 1 if AUDIO_ENABLED is 1... It can be 1 even if AUDIO_ENABLED is 0, but you will have to feed it with data!
 #define INCLUDE_DEFAULT_WAVES 1	// if 1, the default sondwaves are included. 
 // USB CONFIGURATION: MAX 2 Pipes and 1 device. Modify according to your needs. Be aware that HUB does not support low speed devices!
