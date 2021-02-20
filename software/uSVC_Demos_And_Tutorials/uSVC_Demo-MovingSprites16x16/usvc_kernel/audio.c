@@ -97,7 +97,7 @@ extern const uint16_t stepTable[128];
 uint8_t playSong = 0;
 unsigned char lastStatus;
 unsigned char masterVolume;
-uint8_t songSpeed;
+int8_t songSpeed;
 uint8_t step;
 
 #if MUSIC_ENGINE == MIDI
@@ -538,7 +538,7 @@ void resumeSong()
 {
 	playSong = 1;
 }
-void setSongSpeed(uint8_t speed)
+void setSongSpeed(int8_t speed)
 {
 	songSpeed = speed;
 }
